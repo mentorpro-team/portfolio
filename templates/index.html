@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="MentorPro — Mentor 1-1 từ Big Tech. Lộ trình cá nhân hoá giúp bạn chinh phục Google, Meta, Amazon, NVIDIA và các công ty hàng đầu." />
+    <meta name="theme-color" content="#0b1020" />
+    <meta property="og:title" content="MentorPro — Mentor 1-1 từ Big Tech" />
+    <meta property="og:description" content="Học từ người đã làm. Đi nhanh hơn với người đã đi." />
+    <meta property="og:type" content="website" />
+    <title>{{TITLE}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="container">
+        <nav class="topbar">
+          <a class="brand" href="#top">
+            <img class="brand-logo" src="images/brand/mentor-pro.png" alt="MentorPro" />
+          </a>
+          <a class="cta-mini" href="https://m.me/Mentor.Pro.Official" target="_blank" rel="noopener">Đặt lịch tư vấn</a>
+        </nav>
+        <div class="hero-content" id="top">
+          <span class="eyebrow">Big Tech · 1-on-1 · Lộ trình cá nhân hoá</span>
+          <h1>{{TITLE}}</h1>
+          <p class="tagline">{{TAGLINE}}</p>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-num">12</span>
+              <span class="stat-label">Học viên có offer</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">5</span>
+              <span class="stat-label">Mentor từ Big Tech</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">8+</span>
+              <span class="stat-label">Công ty đối tác</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">7/2025</span>
+              <span class="stat-label">Thời gian thành lập</span>
+            </div>
+          </div>
+          <p class="hero-note">* Tất cả số liệu được ghi nhận từ <strong>tháng 7/2025</strong> đến nay.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="container main">
+      <div class="tabs" role="tablist" aria-label="MentorPro sections">
+        <div class="tab-nav" role="tablist">
+          {{NAV}}
+        </div>
+        <div class="tab-content">
+        {{PANELS}}
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container partnership-strip">
+        <div class="partnership-badge">
+          <a href="https://www.facebook.com/Mentor.Pro.Official" target="_blank" rel="noopener" aria-label="MentorPro Fanpage">
+            <img src="images/brand/mentor-pro.png" alt="MentorPro" class="partnership-logo" />
+          </a>
+          <span class="partnership-x">×</span>
+          <a href="https://engineerprogurus.com/" target="_blank" rel="noopener" aria-label="Engineer Pro website">
+            <img src="images/brand/engineer-pro.png" alt="Engineer Pro" class="partnership-logo" />
+          </a>
+        </div>
+        <p class="partnership-text">MentorPro × Engineer Pro — Đối tác chiến lược</p>
+      </div>
+
+      <div class="container footer-bottom">
+        <p class="footer-tagline">Mentor 1:1 từ Big Tech. Đồng hành đến khi bạn nhận được job offer.</p>
+        <div class="footer-channels">
+          <a href="https://www.facebook.com/Mentor.Pro.Official" target="_blank" rel="noopener">Fanpage</a>
+          <span class="footer-dot">·</span>
+          <a href="https://m.me/Mentor.Pro.Official" target="_blank" rel="noopener">Messenger</a>
+          <span class="footer-dot">·</span>
+          <a href="https://zalo.me/0352911223" target="_blank" rel="noopener">Zalo</a>
+        </div>
+        <p class="copyright">© <span id="year">2026</span> MentorPro.</p>
+      </div>
+    </footer>
+
+    <div class="fab-dock" aria-label="Liên hệ MentorPro">
+      <a
+        class="fab fab--messenger"
+        href="https://m.me/Mentor.Pro.Official"
+        target="_blank"
+        rel="noopener"
+        aria-label="Chat với MentorPro qua Messenger"
+        title="Chat với MentorPro qua Messenger"
+      >
+        <span class="fab-tooltip">Chat qua Messenger</span>
+        <svg class="fab-icon" viewBox="0 0 36 36" aria-hidden="true">
+          <defs>
+            <linearGradient id="msgrGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%" stop-color="#00B2FF"/>
+              <stop offset="100%" stop-color="#006AFF"/>
+            </linearGradient>
+          </defs>
+          <circle cx="18" cy="18" r="18" fill="url(#msgrGrad)"/>
+          <path fill="#fff" d="M18 7C11.4 7 6 12 6 18.3c0 3.5 1.7 6.7 4.4 8.8v4.4l4.1-2.3c1.1.3 2.3.5 3.5.5 6.6 0 12-5 12-11.4S24.6 7 18 7zm1.2 15.4l-3.1-3.3-6.1 3.3 6.7-7.1 3.1 3.3 6.1-3.3-6.7 7.1z"/>
+        </svg>
+      </a>
+
+      <a
+        class="fab fab--zalo"
+        href="https://zalo.me/0352911223"
+        target="_blank"
+        rel="noopener"
+        aria-label="Chat với MentorPro qua Zalo"
+        title="Chat với MentorPro qua Zalo"
+      >
+        <span class="fab-tooltip">Chat qua Zalo</span>
+        <svg class="fab-icon" viewBox="0 0 36 36" aria-hidden="true">
+          <circle cx="18" cy="18" r="18" fill="#0068FF"/>
+          <text
+            x="18" y="22"
+            text-anchor="middle"
+            font-family="'Plus Jakarta Sans','Inter',system-ui,sans-serif"
+            font-weight="800"
+            font-size="11"
+            letter-spacing="-0.3"
+            fill="#fff"
+          >Zalo</text>
+        </svg>
+      </a>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
