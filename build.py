@@ -9,8 +9,10 @@ Kết quả ghi ra thư mục ``docs/`` để GitHub Pages serve.
 from __future__ import annotations
 
 import datetime
+import html
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -29,7 +31,18 @@ TEMPLATE = ROOT / "templates" / "index.html"
 ASSETS_DIR = ROOT / "assets"
 OUT_DIR = ROOT / "docs"
 
+# ── Single source of truth cho các URL/asset path công khai ────────────────
 SITE_URL = "https://mentorpro-team.github.io/portfolio/"
+SITE_NAME = "MentorPro"
+OG_IMAGE_URL = SITE_URL + "images/brand/banner-job-offer.jpg"
+LOGO_URL = SITE_URL + "images/brand/mentor-pro.png"
+
+CONFIG = {
+    "SITE_URL": SITE_URL,
+    "SITE_NAME": SITE_NAME,
+    "OG_IMAGE_URL": OG_IMAGE_URL,
+    "LOGO_URL": LOGO_URL,
+}
 
 TAB_HEADER_RE = re.compile(r"^# Tab (\d+)\s*[—-]\s*(.+?)\s*$", re.MULTILINE)
 TOC_LINK_RE = re.compile(r"\n\[⬆ Về mục lục\][^\n]*\n")
@@ -93,34 +106,48 @@ def build_html(template: str, title: str, tagline: str, tabs: list[dict]) -> str
     nav_items = []
     panels = []
 
+    title_safe = html.escape(title, quote=False)
+
     for idx, tab in enumerate(tabs):
         is_active = idx == 0
         slug = slugify(tab["title"])
         panel_id = f"tab-{tab['num']}-{slug}"
+        button_id = f"tab-btn-{tab['num']}-{slug}"
+        tab_title_safe = html.escape(tab["title"], quote=False)
 
         nav_items.append(
-            f'<button class="tab-btn{" is-active" if is_active else ""}" '
+            f'<button id="{button_id}" '
+            f'class="tab-btn{" is-active" if is_active else ""}" '
             f'role="tab" aria-selected="{"true" if is_active else "false"}" '
             f'aria-controls="{panel_id}" data-target="{panel_id}">'
             f'<span class="tab-num">{tab["num"]}</span>'
-            f'<span class="tab-name">{tab["title"]}</span>'
+            f'<span class="tab-name">{tab_title_safe}</span>'
             f"</button>"
         )
 
         panel_html = render_markdown(tab["body_md"])
+        # Inject h2 (visually-hidden — visible với screen reader, SEO crawler,
+        # và no-JS fallback. CSS .visually-hidden ẩn về mặt thị giác khi JS bật.)
+        h2 = f'<h2 class="visually-hidden tab-heading">{tab_title_safe}</h2>'
         panels.append(
             f'<section class="tab-panel{" is-active" if is_active else ""}" '
-            f'id="{panel_id}" role="tabpanel" aria-hidden="{"false" if is_active else "true"}">'
-            f"{panel_html}"
+            f'id="{panel_id}" role="tabpanel" '
+            f'aria-labelledby="{button_id}" '
+            f'aria-hidden="{"false" if is_active else "true"}">'
+            f"{h2}{panel_html}"
             f"</section>"
         )
 
-    return (
-        template.replace("{{TITLE}}", title)
+    result = (
+        template.replace("{{TITLE}}", title_safe)
         .replace("{{TAGLINE}}", tagline)
         .replace("{{NAV}}", "\n          ".join(nav_items))
         .replace("{{PANELS}}", "\n        ".join(panels))
     )
+    # Replace centralized config placeholders ({{SITE_URL}}, {{OG_IMAGE_URL}}, …)
+    for key, value in CONFIG.items():
+        result = result.replace("{{" + key + "}}", value)
+    return result
 
 
 def copy_assets() -> None:
@@ -145,15 +172,53 @@ def write_robots() -> None:
     (OUT_DIR / "robots.txt").write_text(txt, encoding="utf-8")
 
 
+def _content_last_modified() -> str:
+    """Return the latest modification date of content sources (ISO 8601).
+
+    Strategy:
+    1. Prefer the latest git commit timestamp for tracked content files —
+       this makes lastmod reproducible regardless of clone/build time.
+    2. Fall back to the latest filesystem mtime when git is unavailable.
+    """
+    content_files = [
+        SRC,
+        TEMPLATE,
+        ASSETS_DIR / "style.css",
+        ASSETS_DIR / "script.js",
+    ]
+    # Try git log (most accurate, ignores rebuild noise)
+    try:
+        out = subprocess.run(
+            [
+                "git", "-C", str(ROOT), "log", "-1",
+                "--format=%cI",
+                "--",
+                *(str(p.relative_to(ROOT)) for p in content_files if p.exists()),
+            ],
+            capture_output=True, text=True, check=True, timeout=5,
+        )
+        stamp = out.stdout.strip()
+        if stamp:
+            return stamp.split("T", 1)[0]
+    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+        pass
+
+    # Fallback: filesystem mtime
+    mtimes = [p.stat().st_mtime for p in content_files if p.exists()]
+    if mtimes:
+        return datetime.date.fromtimestamp(max(mtimes)).isoformat()
+    return datetime.date.today().isoformat()
+
+
 def write_sitemap() -> None:
-    """Single-page sitemap with today's lastmod."""
-    today = datetime.date.today().isoformat()
+    """Single-page sitemap; lastmod = max(content file mtimes / git commit)."""
+    last_mod = _content_last_modified()
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         '  <url>\n'
         f'    <loc>{SITE_URL}</loc>\n'
-        f'    <lastmod>{today}</lastmod>\n'
+        f'    <lastmod>{last_mod}</lastmod>\n'
         '    <changefreq>weekly</changefreq>\n'
         '    <priority>1.0</priority>\n'
         '  </url>\n'

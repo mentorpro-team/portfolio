@@ -34,12 +34,15 @@ twitter:title, twitter:description, twitter:image
 
 ### JSON-LD Schema.org structured data
 
-3 entity trong 1 `@graph`:
+2 entity trong 1 `@graph`:
 1. **Organization** — name, url, logo, image, description, foundingDate, sameAs (FB, m.me, Zalo), contactPoint
 2. **WebSite** — publisher reference back to Organization
-3. **FAQPage** — 4 Q&A common questions
 
 Dùng `@id` để cross-reference giữa entities.
+
+> ⚠ **Đã bỏ FAQPage schema (5/2026).** Theo Google FAQ docs cập nhật 7/5/2026, FAQ rich result chỉ áp dụng cho website chính phủ / y tế có thẩm quyền — không còn áp dụng cho trang thương mại như MentorPro. Schema-only FAQ (không có visible FAQ section trên page) là **structured data quality risk**.
+>
+> Nếu sau này MentorPro muốn add FAQ rich result, cần: (1) render FAQ section visible trên trang với cùng Q&A; (2) verify đủ tiêu chí Google hiện tại.
 
 ### Robots & Sitemap
 
